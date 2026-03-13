@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabbit Hole at 2AM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --coral:  #F4552A;
+  --blue:   #1E6FFF;
+  --mint:   #00B37D;
+  --yellow: #F5A800;
+  --slate:  #3D5A80;
+  --ink:    #111318;
+  --mid:    #4A5260;
+  --muted:  #8A909E;
+  --surface:#F6F7F9;
+  --white:  #FFFFFF;
+  --border: rgba(17,19,24,0.09);
+  --shadow: 0 2px 16px rgba(17,19,24,0.07);
+  --shadow-lg:0 14px 44px rgba(17,19,24,0.13);
+  --r:18px;
+}
+
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Inter',sans-serif;
+  background:var(--white);
+  color:var(--ink);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ─── Cursor ─── */
+#cur {
+  width:10px;height:10px;background:var(--coral);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s,background .25s;
+}
+#cur-ring {
+  width:34px;height:34px;border:1.5px solid rgba(244,85,42,.3);border-radius:50%;
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .25s,height .25s,border-color .25s;
+}
+body:has(a:hover) #cur,
+body:has(button:hover) #cur { width:20px;height:20px;background:var(--blue); }
+body:has(a:hover) #cur-ring,
+body:has(button:hover) #cur-ring { width:50px;height:50px;border-color:rgba(30,111,255,.28); }
+
+/* ─── Background ─── */
+#bg { position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden; }
+.blob {
+  position:absolute;border-radius:50%;filter:blur(88px);opacity:.09;
+  animation:drift 22s ease-in-out infinite alternate;
+}
+.blob:nth-child(1){width:560px;height:560px;background:var(--coral);top:-130px;left:-100px;animation-delay:0s}
+.blob:nth-child(2){width:420px;height:420px;background:var(--blue);top:8%;right:-110px;animation-delay:-7s}
+.blob:nth-child(3){width:380px;height:380px;background:var(--mint);bottom:18%;left:4%;animation-delay:-13s}
+.blob:nth-child(4){width:310px;height:310px;background:var(--yellow);bottom:0;right:8%;animation-delay:-5s}
+@keyframes drift {
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(26px,-16px) scale(1.04)}
+  100%{transform:translate(-16px,22px) scale(.97)}
+}
+.dots {
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(17,19,24,.07) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+
+/* ─── Layout ─── */
+.wrap { max-width:1080px;margin:0 auto;padding:0 24px;position:relative;z-index:1; }
+
+/* ─── Nav ─── */
+nav {
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);padding:14px 0;
+}
+.nav-in {
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1080px;margin:0 auto;padding:0 24px;gap:12px;
+}
+.logo {
+  font-family:'Outfit',sans-serif;font-weight:900;font-size:1.15rem;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+}
+.logo-mark {
+  width:34px;height:34px;background:var(--ink);border-radius:10px;
+  display:grid;place-items:center;
+  font-size:.78rem;font-weight:900;color:white;letter-spacing:-.02em;flex-shrink:0;
+}
+.nav-right { display:flex;align-items:center;gap:10px; }
+
+.btn-shuffle {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.83rem;
+  background:var(--surface);color:var(--mid);
+  border:1.5px solid var(--border);border-radius:100px;
+  padding:9px 20px;cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s,transform .2s;
+}
+.btn-shuffle:hover{background:var(--surface);color:var(--ink);border-color:var(--ink);transform:translateY(-1px)}
+
+.nav-btn {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.83rem;
+  background:var(--ink);color:white;border:none;border-radius:100px;
+  padding:9px 20px;cursor:pointer;
+  transition:background .2s,transform .2s;
+}
+.nav-btn:hover{background:var(--coral);transform:translateY(-1px)}
+
+/* ─── Hero ─── */
+.hero {
+  min-height:86vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 56px;
+  position:relative;z-index:1;
+}
+.eyebrow {
+  display:inline-block;border:1.5px solid var(--border);border-radius:100px;
+  padding:6px 18px;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:30px;animation:up .7s ease both;
+}
+.hero h1 {
+  font-family:'Outfit',sans-serif;font-weight:900;
+  font-size:clamp(3rem,7.5vw,5.8rem);line-height:1.06;letter-spacing:-.03em;
+  max-width:800px;animation:up .8s .08s ease both;
+}
+.hero h1 em{font-style:normal;color:var(--coral)}
+.hero-second {
+  font-family:'Outfit',sans-serif;font-weight:700;
+  font-size:clamp(1.4rem,3vw,2.2rem);color:var(--mid);margin-top:10px;
+  animation:up .8s .16s ease both;
+}
+.hero-desc {
+  max-width:520px;font-size:1rem;line-height:1.8;color:var(--mid);margin-top:22px;
+  animation:up .8s .24s ease both;
+}
+.cta-wrap {
+  margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:14px;
+  animation:up .9s .32s ease both;
+}
+
+/* hero buttons row */
+.hero-btns { display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center; }
+
+.btn-main {
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;
+  background:var(--coral);color:white;border:none;border-radius:100px;
+  padding:17px 40px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(244,85,42,.26);
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,background .2s;
+}
+.btn-main:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 32px rgba(244,85,42,.36);background:#e04020}
+.btn-main:active{transform:scale(.97)}
+
+.btn-hero-shuffle {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;
+  background:transparent;color:var(--ink);
+  border:2px solid var(--border);border-radius:100px;
+  padding:15px 32px;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .28s cubic-bezier(.34,1.56,.64,1);
+}
+.btn-hero-shuffle:hover{border-color:var(--ink);background:var(--surface);transform:translateY(-2px)}
+.btn-hero-shuffle:active{transform:scale(.97)}
+
+.hint{font-size:.78rem;color:var(--muted);font-style:italic}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── Sections ─── */
+.section{padding:16px 0 56px;position:relative;z-index:1}
+.s-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1.5rem;color:var(--ink);margin-bottom:4px}
+.s-sub{font-size:.85rem;color:var(--muted);margin-bottom:24px}
+
+/* ─── Main card ─── */
+#result-area{min-height:80px}
+.main-card {
+  background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  cursor:grab;user-select:none;
+  animation:cardIn .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+.main-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.main-card:active{cursor:grabbing}
+.card-stripe{height:5px}
+.card-body{padding:34px 36px 32px}
+.card-tag {
+  display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  border-radius:100px;padding:4px 12px;margin-bottom:16px;
+}
+.card-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:clamp(1.4rem,2.8vw,1.9rem);line-height:1.2;margin-bottom:14px}
+.card-desc{font-size:.97rem;line-height:1.8;color:var(--mid);margin-bottom:28px;max-width:660px}
+.card-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* "Read more" — goes to Wikipedia */
+.btn-read {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;
+  color:var(--ink);text-decoration:none;padding:10px 22px;
+  border:1.5px solid var(--border);border-radius:100px;background:transparent;
+  transition:border-color .2s,background .2s,transform .2s;cursor:pointer;
+}
+.btn-read:hover{border-color:var(--ink);background:var(--surface);transform:translateY(-1px)}
+
+/* "Go deeper" — loads a new random topic */
+.btn-deeper {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;
+  background:var(--ink);color:white;border:none;border-radius:100px;
+  padding:10px 24px;cursor:pointer;
+  transition:background .2s,transform .28s cubic-bezier(.34,1.56,.64,1);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-deeper:hover{background:var(--coral);transform:translateY(-2px)}
+.btn-deeper .arr{transition:transform .25s;display:inline-block}
+.btn-deeper:hover .arr{transform:translateX(4px)}
+
+/* ─── Flip cards ─── */
+#related-section{display:none}
+.rel-grid {
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:14px;margin-top:8px;
+}
+@media(max-width:900px){.rel-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.rel-grid{grid-template-columns:1fr 1fr}}
+
+.flip-card{height:220px;perspective:900px;cursor:pointer;animation:cardIn .45s cubic-bezier(.34,1.56,.64,1) both}
+.flip-card:nth-child(2){animation-delay:.07s}
+.flip-card:nth-child(3){animation-delay:.14s}
+.flip-card:nth-child(4){animation-delay:.21s}
+.flip-inner {
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+}
+.flip-card:hover .flip-inner,
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back {
+  position:absolute;inset:0;backface-visibility:hidden;
+  border-radius:var(--r);border:1.5px solid var(--border);
+  padding:20px 20px 16px;background:var(--white);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.flip-back{
+  transform:rotateY(180deg);
+  display:flex;flex-direction:column;justify-content:space-between;gap:6px;
+}
+.flip-front{display:flex;flex-direction:column;justify-content:flex-end}
+.flip-stripe{position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--r) var(--r) 0 0}
+.flip-cat{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.flip-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;line-height:1.3;color:var(--ink)}
+.flip-hint{font-size:.63rem;color:var(--muted);font-weight:500;margin-top:9px;opacity:.65}
+.flip-back-label{font-size:.63rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.flip-back-text{font-size:.8rem;line-height:1.65;color:var(--mid);flex:1}
+.flip-cta {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.75rem;
+  color:white;border:none;border-radius:100px;
+  padding:7px 16px;cursor:pointer;align-self:flex-start;
+  transition:opacity .2s,transform .2s;
+}
+.flip-cta:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ─── Shuffle section header button ─── */
+.s-header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+.btn-s-shuffle {
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:.8rem;
+  background:transparent;color:var(--muted);
+  border:1.5px solid var(--border);border-radius:100px;
+  padding:6px 16px;cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s,transform .2s;
+}
+.btn-s-shuffle:hover{color:var(--ink);border-color:var(--ink);background:var(--surface);transform:translateY(-1px)}
+
+/* ─── Scroll reveal ─── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .55s ease,transform .55s cubic-bezier(.34,1.2,.64,1)}
+.reveal.vis{opacity:1;transform:none}
+
+/* ─── Toast ─── */
+#toast {
+  position:fixed;bottom:26px;left:50%;
+  transform:translateX(-50%) translateY(72px);
+  background:var(--ink);color:white;
+  font-family:'Outfit',sans-serif;font-weight:600;font-size:.84rem;
+  padding:11px 26px;border-radius:100px;
+  box-shadow:0 6px 24px rgba(17,19,24,.2);
+  z-index:1000;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;
+}
+#toast.on{transform:translateX(-50%) translateY(0)}
+
+/* ─── Footer ─── */
+footer {
+  position:relative;z-index:1;border-top:1px solid var(--border);
+  padding:52px 24px;text-align:center;background:var(--surface);
+}
+.ft-logo {
+  font-family:'Outfit',sans-serif;font-weight:900;font-size:1rem;
+  color:var(--ink);margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.ft-logo .logo-mark{width:28px;height:28px;font-size:.7rem;border-radius:8px}
+footer p{font-size:.85rem;color:var(--muted);line-height:2.2}
+footer strong{color:var(--ink);font-weight:600}
+.ft-line{width:36px;height:2.5px;background:var(--coral);border-radius:3px;margin:18px auto}
+
+/* ─── Mobile nav ─── */
+@media(max-width:500px){
+  .btn-shuffle{display:none}
+  .card-body{padding:22px 20px}
+  .card-title{font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="bg"><div class="dots"></div><div class="blob"></div><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-in">
+    <a href="#" class="logo"><div class="logo-mark">RH</div>Rabbit Hole</a>
+    <div class="nav-right">
+      <button class="btn-shuffle" onclick="shuffle()">Shuffle</button>
+      <button class="nav-btn" onclick="goDeeper()">Dive In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">A curiosity engine for the internet</div>
+  <h1>The internet is full of<br><em>strange things.</em></h1>
+  <p class="hero-second">Most people never discover them.</p>
+  <p class="hero-desc">Rabbit Hole helps you explore fascinating corners of the internet — strange history, bizarre science, unusual communities, and wonderfully weird discoveries.</p>
+  <div class="cta-wrap">
+    <div class="hero-btns">
+      <button class="btn-main" onclick="goDeeper()">Take me down a rabbit hole &rarr;</button>
+    </div>
+    <p class="hint">Careful. People rarely stop at just one.</p>
+  </div>
+</section>
+
+<!-- DISCOVERY -->
+<div class="wrap">
+  <div class="section">
+    <h2 class="s-title">Your Discovery</h2>
+    <p class="s-sub">Each click pulls you a little further in.</p>
+    <div id="result-area">
+      <div style="text-align:center;padding:64px 0;color:var(--muted)">
+        <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.1rem;color:var(--mid);margin-bottom:10px">Your first discovery is waiting.</div>
+        <div style="font-size:.88rem">Hit the button above to begin.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section reveal" id="related-section">
+    <h2 class="s-title">Related Curiosities</h2>
+    <p class="s-sub">Hover a card to flip it. Click "Go deeper" to explore a new topic.</p>
+    <div class="rel-grid" id="rel-grid"></div>
+  </div>
+</div>
+
+<!-- SHUFFLE -->
+<div id="shuffle-bar" style="display:none;text-align:center;padding:40px 24px 56px;position:relative;z-index:1;">
+  <button class="btn-main" onclick="shuffle()">Shuffle &rarr;</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-logo"><div class="logo-mark">RH</div>Rabbit Hole at 2AM</div>
+  <div class="ft-line"></div>
+  <p>Built for those moments when curiosity wins over sleep.</p>
+  <p>Made for late-night explorers.</p>
+  <p>Built by <strong>Tanu Nath</strong>.</p>
+</footer>
+
+<script>
+/* ── Cursor ── */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+/* ── BG parallax ── */
+const blobs=document.querySelectorAll('.blob');
+document.addEventListener('mousemove',e=>{
+  const xr=(e.clientX/innerWidth-.5)*22,yr=(e.clientY/innerHeight-.5)*22;
+  blobs.forEach((b,i)=>{const d=(i+1)*.3;b.style.transform=`translate(${xr*d}px,${yr*d}px)`;});
+});
+
+/* ── Scroll reveal ── */
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── Toast ── */
+const msgs=[
+  'Falling deeper…','The rabbit hole widens.','Things get stranger from here.',
+  'You cannot stop now.','Curiosity unlocked.','This is what 2am feels like.',
+  'One more. Just one more.','The algorithm has no idea.','Knowledge is a spiral.',
+  'You are not the same person who started this.','Time is a suggestion at this point.',
+  'Shuffled into the unknown.','New topic, new rabbit hole.',
+];
+let tIdx=0;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg||msgs[tIdx%msgs.length];tIdx++;
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);
+}
+
+/* ── Colour system ── */
+const C={
+  coral:  {bg:'#FFF1EE',text:'#C8320A',bar:'#F4552A'},
+  blue:   {bg:'#EEF3FF',text:'#1044B2',bar:'#1E6FFF'},
+  mint:   {bg:'#EDFAF5',text:'#006B49',bar:'#00B37D'},
+  yellow: {bg:'#FFF8E6',text:'#8A5C00',bar:'#F5A800'},
+  slate:  {bg:'#EEF2F7',text:'#1F3A5C',bar:'#3D5A80'},
+};
+
+/* ── Stories (14 topics, 4 related each) ── */
+const holes=[
+  {
+    color:'coral',tag:'Strange History',
+    title:'The Man Who Saved the World by Doing Nothing',
+    desc:'In 1983, Soviet officer Stanislav Petrov received an alarm warning of five incoming US nuclear missiles. Protocol required escalation to command — which would almost certainly have triggered retaliation. He had a hunch the system was malfunctioning and chose to wait. He was right. His silence that night may be the single most consequential act of restraint in human history.',
+    url:'https://en.wikipedia.org/wiki/1983_Soviet_nuclear_false_alarm_incident',
+    related:[
+      {color:'blue',  tag:'Cold War',    title:'The Doomsday Machine That Actually Exists',           desc:"The Soviet Perimeter system was designed to launch nuclear weapons automatically if command went silent. Parts of it may still be active today."},
+      {color:'mint',  tag:'Decision',    title:'The Generals Who Said No',                            desc:'Three separate Soviet officials refused orders at key Cold War flashpoints. None were celebrated at the time.'},
+      {color:'yellow',tag:'Near Misses', title:'The B-52 That Dropped a Live H-Bomb Over North Carolina',desc:'In 1961 two hydrogen bombs fell from a breaking aircraft. One went through five of its six arming steps before landing in a field.'},
+      {color:'slate', tag:'Cold War',    title:'Operation Able Archer Almost Started World War III',  desc:'A 1983 NATO military exercise was so realistic that Soviet intelligence concluded a nuclear first strike was imminent. The world came very close.'},
+    ]
+  },
+  {
+    color:'blue',tag:'Bizarre Science',
+    title:'Trees Send Sugar to Their Dying Neighbours',
+    desc:"Forests run a secret underground economy. Trees link their roots to vast fungal networks and use them to trade sugar and water with neighbours. Older trees actively send extra nutrients to shaded saplings. When a tree is dying, it sometimes floods its companions with a last burst of carbon. The forest is, in a very literal sense, caring.",
+    url:'https://en.wikipedia.org/wiki/Mycorrhizal_network',
+    related:[
+      {color:'mint',  tag:'Biology',  title:'Slime Molds Can Design Rail Networks Better Than Engineers',  desc:"Tokyo's subway system and slime mold growth patterns match almost exactly — and the mold found the solution overnight."},
+      {color:'coral', tag:'Botany',   title:'Plants Warn Each Other Using Airborne Chemicals',              desc:"When attacked by insects, many plants release volatile compounds that trigger defence responses in neighbours before they're even touched."},
+      {color:'slate', tag:'Ecology',  title:'The Largest Living Organism on Earth is a Fungus',            desc:'A single honey fungus in Oregon spans 10 square kilometres and is estimated to be 8,650 years old.'},
+      {color:'yellow',tag:'Science',  title:'Trees Can Recognise Their Own Kin',                           desc:'Studies show that trees preferentially direct nutrients toward seedlings grown from their own seeds compared to unrelated seedlings nearby.'},
+    ]
+  },
+  {
+    color:'mint',tag:'Vanishing Things',
+    title:'The Island That Appeared on Every Map but Does Not Exist',
+    desc:"Sandy Island showed up on maps for over 150 years — in Google Maps, scientific databases, and official Australian maritime charts. In 2012, a research ship sailed to its recorded coordinates and found 1,400 metres of open ocean. No reef, no shoal, just nothing. How it ended up trusted by cartographers for a century and a half remains unexplained.",
+    url:'https://en.wikipedia.org/wiki/Sandy_Island,_New_Caledonia',
+    related:[
+      {color:'yellow',tag:'Cartography',title:"The Phantom Archipelago That Sent Explorers to Their Deaths",    desc:"Ilha Brasil appeared on European maps from 1325 to 1873. Expeditions were funded to find it. Not one succeeded."},
+      {color:'blue',  tag:'Geography', title:'Islands That Appeared Overnight',                                 desc:'In 2013, a Pakistani earthquake raised a new island out of the sea. It was visible from space within hours of the tremors stopping.'},
+      {color:'coral', tag:'Maps',      title:'The Town That Exists Only Because of a Typo',                     desc:'A cartographic error in 1920s Germany created a village listed in official records for decades despite having zero population.'},
+      {color:'slate', tag:'Oceans',    title:"The River That Flows Under the Ocean",                            desc:"Beneath the Black Sea, a 350-kilometre underwater channel carries dense saltwater like a river along the seafloor, complete with rapids and waterfalls."},
+    ]
+  },
+  {
+    color:'yellow',tag:'Wonderfully Weird',
+    title:'The Word "Petrichor" Was Invented in 1964',
+    desc:"There is a word for the smell of rain — coined just 60 years ago. Petrichor describes the earthy scent released when rain hits dry soil. It is caused by geosmin, produced by bacteria in the ground. Humans can detect geosmin at concentrations of five parts per trillion — far more sensitively than sharks detect blood. We almost certainly evolved this ability to locate water from miles away.",
+    url:'https://en.wikipedia.org/wiki/Petrichor',
+    related:[
+      {color:'slate', tag:'Language',     title:'English Has No Word for the Feeling of Sunlight on Your Skin',desc:'Over 400 documented lexical gaps exist in English — emotions and sensations that other languages have precise words for and English simply does not.'},
+      {color:'coral', tag:'Neuroscience', title:'Why Rain Sounds Calm You Down',                               desc:'White noise, including rainfall, actively prevents your brain from pattern-matching — the same process that produces anxious loops of thought.'},
+      {color:'mint',  tag:'Atmosphere',   title:'Bacteria That Travel in Clouds',                              desc:'Certain microbes attach to water droplets and ascend into the atmosphere, potentially travelling thousands of miles and influencing rainfall patterns.'},
+      {color:'blue',  tag:'Senses',       title:'Why Smell Is the Strongest Trigger for Memory',               desc:"Scent is the only sense that routes directly to the brain's memory and emotion centres without passing through the thalamus. A single smell can return you to a specific day decades ago."},
+    ]
+  },
+  {
+    color:'slate',tag:'Unusual Places',
+    title:'There Is a Town in Colorado Where the Theatre Has a Wall Open to a Cliff',
+    desc:"Creede, Colorado — population 280 — hosts one of the most critically respected repertory theatre festivals in the United States, tripling its population each summer. The festival was founded in 1966 by a man who drove through, liked the scenery, and never left. The theatre still operates out of a converted building with one wall that opens directly onto a cliff face.",
+    url:'https://en.wikipedia.org/wiki/Creede_Repertory_Theatre',
+    related:[
+      {color:'blue',  tag:'Communities',title:'The Village That Refused to Die',              desc:"Consonno, Italy was purchased in 1962 by a developer who demolished the original village to build a 'Las Vegas of the north'. It failed completely. The original residents rebuilt anyway."},
+      {color:'yellow',tag:'Odd Places', title:'The Airport Built for One Passenger',          desc:'Ambrym Island in Vanuatu has a runway built primarily to service a single resort — owned by the same family that lobbied the government to build it.'},
+      {color:'coral', tag:'Culture',    title:'The Library With No Staff, Hours, or Locks',   desc:'Several villages in rural India operate community libraries on the honour system, with no cataloguing and no record-keeping. Books disappear and return for reasons nobody tracks.'},
+      {color:'mint',  tag:'Geography',  title:'The Country With No Official Capital',         desc:"Nauru, a Pacific island nation, has no official capital city. Government buildings are scattered across the island. The nearest thing to a centre is a district called Yaren, which is simply where most things happen."},
+    ]
+  },
+  {
+    color:'coral',tag:'Strange History',
+    title:'The Great Molasses Flood of 1919',
+    desc:"On January 15, 1919, a 15-metre-tall tank holding 2.3 million gallons of molasses burst in Boston, sending a wave through the city at 56 kilometres per hour. It killed 21 people, injured 150, and coated the waterfront neighbourhood of North End so thoroughly that residents claimed the area smelled faintly of molasses on hot summer days well into the 1990s.",
+    url:'https://en.wikipedia.org/wiki/Great_Molasses_Flood',
+    related:[
+      {color:'mint',  tag:'Disasters', title:'The London Beer Flood of 1814',              desc:'A giant vat of fermenting beer ruptured in a London brewery and sent 100,000 gallons through the surrounding streets. Eight people drowned.'},
+      {color:'blue',  tag:'Physics',   title:'Why Slow Things Can Be Deadly',              desc:'Non-Newtonian fluids behave counterintuitively. Molasses is slow — until thousands of gallons are moving in one direction, at which point it hits like a wall.'},
+      {color:'yellow',tag:'Aftermath', title:'The Clean-Up That Took Six Months',          desc:'Workers used salt water to dissolve the molasses and sand to absorb the rest. The harbour was reportedly brown until the summer of 1919.'},
+      {color:'slate', tag:'History',   title:'The Emu War Australia Lost',                 desc:"In 1932, the Australian military deployed soldiers with machine guns to cull emus damaging crops in Western Australia. The emus won. The operation was abandoned after the army ran out of ammunition and morale."},
+    ]
+  },
+  {
+    color:'blue',tag:'Debunked',
+    title:'You Cannot See the Great Wall of China from Space',
+    desc:"This is one of the most repeated facts in the world — and it is wrong. The Great Wall is roughly as wide as a school corridor. Even at 200 km altitude, you would need eyesight 7.5 times sharper than 20/20 to resolve it. Chinese astronaut Yang Liwei looked for it specifically during his 2003 mission and confirmed he could not see it. The myth appears to have started in a 1932 Ripley's column.",
+    url:'https://en.wikipedia.org/wiki/Visibility_of_the_Great_Wall_of_China_from_space',
+    related:[
+      {color:'coral', tag:'Myths',          title:'The Five Second Rule Has Been Tested',       desc:"Food picked up within five seconds does not pick up fewer bacteria. The relevant variable is the moisture content of the floor. Wet floors transfer bacteria in under a millisecond."},
+      {color:'slate', tag:'Misconceptions', title:'Goldfish Memory Is Actually Several Months Long', desc:'The three-second memory claim has no scientific origin. Lab-trained goldfish remember learned tasks for up to five months.'},
+      {color:'mint',  tag:'History',        title:'Napoleon Was Not Short',                     desc:"At 5 ft 7 in, Napoleon Bonaparte was slightly above average height for a French man of his era. The myth originated partly from British propaganda and a unit conversion error."},
+      {color:'yellow',tag:'Science',        title:"We Don't Actually Use Only 10% of Our Brains",desc:"Brain imaging shows that over the course of a day, virtually all brain regions are active. The 10% myth has no known scientific origin and may have come from a misquote of William James in the early 1900s."},
+    ]
+  },
+  {
+    color:'mint',tag:'Unsolved',
+    title:'The Voynich Manuscript Has Defeated Every Codebreaker for 600 Years',
+    desc:'The Voynich Manuscript is a 240-page illustrated book, carbon-dated to the early 15th century, written in a completely unknown script. It contains illustrations of plants that do not match any known species, astronomical diagrams, and figures of women in pools. It has been studied by professional cryptographers, linguists, and computer scientists for over a century. Nobody can read a single word.',
+    url:'https://en.wikipedia.org/wiki/Voynich_manuscript',
+    related:[
+      {color:'yellow',tag:'Mysteries',    title:'The Zodiac Cipher Took 51 Years to Crack',        desc:"One of the Zodiac Killer's encrypted messages was only solved in 2020, by a team of three amateur codebreakers working from their homes."},
+      {color:'blue',  tag:'Linguistics',  title:"The Language With No Known Relatives",             desc:"Basque, spoken in northern Spain, has no demonstrated connection to any other language on Earth. Its origins are entirely unknown."},
+      {color:'coral', tag:'Archaeology',  title:'The Phaistos Disc Has Never Been Deciphered',      desc:'Found in Crete in 1908, the Phaistos Disc contains 241 symbols arranged in a spiral. Linguists have proposed hundreds of translations. None has been accepted.'},
+      {color:'slate', tag:'Unsolved',     title:"The Taman Shud Case: A Body With No Identity",     desc:"In 1948, a man was found dead on an Australian beach. No cause of death, no identification, no match in any missing persons record. A scrap of paper in his pocket read only 'Tamam Shud' — Persian for 'it is finished'."},
+    ]
+  },
+  {
+    color:'yellow',tag:'Human Behaviour',
+    title:'The Experiment That Showed Anyone Can Be Made Cruel',
+    desc:"In 1961, Stanley Milgram's obedience experiments showed that ordinary people — teachers, nurses, office workers — would administer what they believed were lethal electric shocks to a stranger because an authority figure in a lab coat told them to. Over 65% delivered the maximum shock. Milgram conducted 19 variations of the experiment. The result held each time.",
+    url:'https://en.wikipedia.org/wiki/Milgram_experiment',
+    related:[
+      {color:'slate', tag:'Psychology', title:"The Stanford Prison Experiment Was More Complicated Than You Think", desc:"The guards who became brutal were coached to be. Philip Zimbardo himself played the role of prison superintendent. It is now considered as much a study of situational leadership as of cruelty."},
+      {color:'mint',  tag:'Sociology',  title:'The Asch Conformity Experiments',                                   desc:"When actors confidently gave the wrong answer to an obvious visual question, 75% of real participants agreed with them at least once — even when the correct answer was clear."},
+      {color:'coral', tag:'Ethics',     title:'The Bystander Effect Has a Specific Mechanism',                     desc:"The more people witness an emergency, the less likely any individual is to help — not from indifference, but because each person assumes someone else has already acted."},
+      {color:'blue',  tag:'Behaviour',  title:"The Good Samaritan Study: Compassion Is About Context, Not Character",desc:"Seminary students asked to give a lecture on the Good Samaritan parable were less likely to stop and help a person in distress if they were running late. The content of the lecture made no difference."},
+    ]
+  },
+  {
+    color:'slate',tag:'The Natural World',
+    title:'The Mantis Shrimp Sees Colours That Have No Names',
+    desc:"Humans have three colour receptors. The mantis shrimp has sixteen. It perceives ultraviolet, infrared, and wavelengths with no human equivalent. They also punch. Their club-like claws accelerate at the speed of a bullet and strike with a force that creates cavitation bubbles briefly as hot as the surface of the sun. They are four inches long.",
+    url:'https://en.wikipedia.org/wiki/Mantis_shrimp',
+    related:[
+      {color:'blue',  tag:'Zoology',title:'The Pistol Shrimp Creates a Flash Hotter Than the Sun',desc:"When a pistol shrimp snaps its claw shut, the resulting bubble collapses at temperatures briefly exceeding 8,000°C. The shrimp is smaller than your thumb."},
+      {color:'coral', tag:'Vision', title:'Dragonflies See the World in Slow Motion',              desc:"With nearly 360-degree vision and 200 frames per second — versus the human 24 — dragonflies catch 95% of their prey mid-air. They are the most successful hunters in the animal kingdom."},
+      {color:'yellow',tag:'Senses', title:'Sharks Detect Electromagnetic Fields of Buried Prey',   desc:"Sharks can sense the electromagnetic field produced by the muscle contractions of prey buried under sand — a sense that has no human equivalent."},
+      {color:'mint',  tag:'Biology','title':'Crows Hold Grudges and Teach Them to Their Children', desc:"Studies show that crows remember individual human faces, hold grudges against people who treated them badly, and communicate these grudges to their offspring, who have never met the person."},
+    ]
+  },
+  {
+    color:'coral',tag:'Architecture',
+    title:'There Is a Skyscraper in New York With No Windows',
+    desc:'33 Thomas Street is a 29-storey brutalist tower in lower Manhattan clad entirely in solid granite — no windows at all. Built in 1974, it houses telecommunications switching equipment requiring controlled temperatures, not natural light. It is reportedly one of the most hardened civilian buildings in the United States, with blast-proof doors and independent power generation.',
+    url:'https://en.wikipedia.org/wiki/33_Thomas_Street',
+    related:[
+      {color:'slate', tag:'Infrastructure',title:'The Internet Has a Physical Location',                        desc:"Roughly 95% of international internet traffic passes through undersea cables, most of which make landfall at fewer than a dozen coastal sites worldwide."},
+      {color:'mint',  tag:'Architecture',  title:'The Building Designed to Look Different From Every Angle',   desc:"The Walt Disney Concert Hall in Los Angeles was deliberately shaped so that no two photographs of it appear to show the same building."},
+      {color:'blue',  tag:'Cold War',      title:'The Underground Road Network Beneath Washington DC',         desc:"A classified highway tunnel network connects key government buildings in Washington DC. Parts of it have appeared in declassified documents. Most has not."},
+      {color:'yellow',tag:'Design',        title:'The Eiffel Tower Grows in Summer',                           desc:"The Eiffel Tower is 15 centimetres taller in summer than in winter. Iron expands when heated, and Paris summers are hot enough to make a meaningful difference to its 300-metre frame."},
+    ]
+  },
+  {
+    color:'blue',tag:'Mathematics',
+    title:"Graham's Number Would Destroy Your Brain If You Tried to Picture It",
+    desc:"Graham's Number was introduced in 1971 as the upper bound in a graph theory proof. It is incomprehensibly large — the number of digits in the number has more digits than there are atoms in the observable universe. If all matter in the universe were converted into ink, there would not be enough to write it down. Mathematicians believe the actual answer to the problem is probably just 6.",
+    url:"https://en.wikipedia.org/wiki/Graham%27s_number",
+    related:[
+      {color:'yellow',tag:'Maths',      title:"The Number That Must Exist But Has Never Been Found",  desc:"There are either infinitely many odd perfect numbers, or none at all. Mathematicians have been unable to determine which for over 2,000 years."},
+      {color:'coral', tag:'Logic',      title:"Gödel's Theorem Broke Mathematical Certainty Itself",  desc:"In 1931, Kurt Gödel proved that any sufficiently complex mathematical system must contain true statements that cannot be proven within that system."},
+      {color:'slate', tag:'Probability',title:'The Birthday Problem Defies Intuition',                desc:"In a room of just 23 people, the probability that two share a birthday exceeds 50%. In a room of 70, it exceeds 99.9%."},
+      {color:'mint',  tag:'Maths',      title:"Benford's Law Can Detect Financial Fraud",             desc:"In naturally occurring numerical data, the digit 1 appears as the first digit about 30% of the time. Fraudsters who invent numbers tend to distribute digits more evenly — and auditors use this to catch them."},
+    ]
+  },
+  {
+    color:'mint',tag:'The Human Body',
+    title:'Your Gut Contains More Bacteria Than Your Body Has Cells',
+    desc:"The ratio of bacteria to human cells in your body is roughly 1:1 — meaning roughly 38 trillion bacteria live inside you. They produce neurotransmitters, regulate the immune system, and communicate with the brain via the vagus nerve. Disrupting the gut microbiome has been linked to depression, anxiety, Parkinson's disease, and autism spectrum traits.",
+    url:'https://en.wikipedia.org/wiki/Gut_microbiota',
+    related:[
+      {color:'blue',  tag:'Medicine',    title:'The Drug That Treats Depression Might Live in Soil',  desc:"Certain soil bacteria produce compounds that behave similarly to antidepressants in lab conditions. Gardeners consistently report lower rates of anxiety than non-gardeners."},
+      {color:'yellow',tag:'Biology',     title:'You Are Never Entirely Yourself',                     desc:"Between mitochondria, gut bacteria, and the viruses embedded in your DNA, roughly 43% of the cells you carry are not human."},
+      {color:'coral', tag:'Neuroscience',title:'Gut Bacteria Can Alter Personality',                  desc:"Transplanting gut bacteria from bold mice into anxious mice measurably changes their behaviour — and vice versa. The effect has been replicated across multiple studies."},
+      {color:'slate', tag:'Sleep',       title:'Your Brain Physically Shrinks While You Are Awake',   desc:"During waking hours, neurons in the brain swell slightly as they fire. During sleep, they shrink back and the space between them fills with cerebrospinal fluid that clears waste products — including proteins linked to Alzheimer's."},
+    ]
+  },
+  {
+    color:'yellow',tag:'Perception',
+    title:'The Dress Divided the Internet Because You Were Both Right',
+    desc:"In 2015, a photo of a dress split the world between blue-and-black and white-and-gold. Both groups were genuinely seeing different colours. The difference lies in how individual brains discount ambient light — some assume daylight and compensate one way; others assume artificial light and compensate differently. It was the most empirically interesting viral moment in internet history.",
+    url:'https://en.wikipedia.org/wiki/The_dress',
+    related:[
+      {color:'slate', tag:'Senses', title:'The McGurk Effect: Vision Overwrites Sound in Real Time',  desc:"If you watch someone say 'ga' while hearing 'ba', your brain hears 'da'. You cannot hear past it even when you know it is happening."},
+      {color:'mint',  tag:'Memory', title:'The Mandela Effect Has a Neurological Explanation',        desc:"Mass false memories occur because memory is reconstructive, not recorded. We fill gaps with plausible details — and social confirmation makes those details feel certain."},
+      {color:'coral', tag:'Colour', title:'The Ancient Greeks Had No Word for Blue',                  desc:"In the Odyssey, Homer describes the sea as 'wine-dark'. Ancient texts across multiple civilisations lack a distinct word for blue — anthropologists believe cultures only name colours once they can produce them."},
+      {color:'blue',  tag:'Brain',  title:'Your Brain Finishes Sentences Before You Hear Them',      desc:"The brain predicts upcoming words in conversation based on context and begins processing them before they are spoken. When predictions are wrong, there is a measurable delay in comprehension — a mismatch response."},
+    ]
+  },
+];
+
+let idx=0;
+function nextHole(){const h=holes[idx];idx=(idx+1)%holes.length;return h;}
+function randomHole(){
+  const prev=idx;
+  let next;
+  do{next=Math.floor(Math.random()*holes.length);}while(next===prev&&holes.length>1);
+  idx=next;
+  return holes[idx];
+}
+
+/* ── Render main card ── */
+function renderCard(h){
+  const area=document.getElementById('result-area');
+  area.innerHTML='';
+  const c=C[h.color];
+
+  const card=document.createElement('div');
+  card.className='main-card';
+  card.innerHTML=`
+    <div class="card-stripe" style="background:${c.bar}"></div>
+    <div class="card-body">
+      <div class="card-tag" style="background:${c.bg};color:${c.text}">${h.tag}</div>
+      <h3 class="card-title">${h.title}</h3>
+      <p class="card-desc">${h.desc}</p>
+      <div class="card-actions">
+        <a href="${h.url}" target="_blank" rel="noopener" class="btn-read">Read more &rarr;</a>
+      </div>
+    </div>`;
+
+  /* drag swipe */
+  let sx=0,dx=0,down=false;
+  card.addEventListener('mousedown',e=>{sx=e.clientX;down=true;card.style.transition='none';});
+  window.addEventListener('mousemove',e=>{
+    if(!down)return;dx=e.clientX-sx;
+    card.style.transform=`translateX(${dx*.45}px) rotate(${dx*.035}deg)`;
+    card.style.opacity=Math.max(0,1-Math.abs(dx)/500);
+  });
+  window.addEventListener('mouseup',()=>{
+    if(!down)return;down=false;card.style.transition='';
+    if(Math.abs(dx)>80){goDeeper();}
+    else{card.style.transform='';card.style.opacity='';}
+    dx=0;
+  });
+
+  area.appendChild(card);
+  renderRelated(h.related);
+}
+
+/* ── Render flip cards (4 per topic) ── */
+function renderRelated(items){
+  const sec=document.getElementById('related-section');
+  const grid=document.getElementById('rel-grid');
+  sec.style.display='block';grid.innerHTML='';
+  document.getElementById('shuffle-bar').style.display='block';
+
+  items.forEach((item,i)=>{
+    const c=C[item.color];
+    const wrap=document.createElement('div');
+    wrap.className='flip-card';
+    wrap.style.animationDelay=(i*.08)+'s';
+    wrap.innerHTML=`
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-stripe" style="background:${c.bar}"></div>
+          <div class="flip-cat" style="color:${c.text}">${item.tag}</div>
+          <div class="flip-title">${item.title}</div>
+          <div class="flip-hint">Hover to discover</div>
+        </div>
+        <div class="flip-back" style="background:${c.bg};border-color:transparent">
+          <div class="flip-back-label" style="color:${c.text}">${item.tag}</div>
+          <div class="flip-back-text">${item.desc}</div>
+          <button class="flip-cta" style="background:${c.bar}" onclick="goDeeper(event)">Go deeper &rarr;</button>
+        </div>
+      </div>`;
+
+    wrap.addEventListener('click',e=>{
+      if(e.target.classList.contains('flip-cta'))return;
+      wrap.classList.toggle('flipped');
+    });
+    grid.appendChild(wrap);
+  });
+
+  setTimeout(()=>sec.classList.add('vis'),60);
+}
+
+/* ── Go deeper: sequential ── */
+function goDeeper(e){
+  if(e)e.stopPropagation();
+  toast();
+  renderCard(nextHole());
+  setTimeout(()=>document.getElementById('result-area').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+/* ── Shuffle: random topic ── */
+function shuffle(){
+  toast('Shuffled into something new.');
+  renderCard(randomHole());
+  setTimeout(()=>document.getElementById('result-area').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+</script>
+</body>
+</html>
